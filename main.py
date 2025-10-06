@@ -38,7 +38,7 @@ class UniversalJobScraper:
         
     async def initialize(self):
         """Initialize pure agent system"""
-        logger.info("Initializing Universal Job Scraper with Pure Agents")
+        logger.info("Initializing AI Job Scraper with Pure Agents")
         
         # Initialize tools
         self.browser_tool = BrowserTool()
@@ -55,12 +55,12 @@ class UniversalJobScraper:
         # Create runner
         # self.runner = Runner()
         
-        logger.info("Universal Job Scraper initialized")
+        logger.info("AI Job Scraper initialized")
         
     def get_user_input(self):
         """Get job search parameters"""
-        print("\n=== Universal Job Scraper ===")
-        print("This system can scrape ANY website in the world.\n")
+        print("\n=== AI Job Scraper ===")
+        print("This system takes assistance from AI to scrape jobs.\n")
         
         job_title = input("Job Title: ").strip()
         while not job_title:

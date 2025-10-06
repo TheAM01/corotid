@@ -2,7 +2,7 @@
 Browser Tool - Playwright interface for agents
 Tools that agents can call to control browser
 """
-
+import re
 import asyncio
 from playwright.async_api import async_playwright
 from agents import function_tool
@@ -28,7 +28,7 @@ class BrowserTool:
         )
         self.context = await self.browser.new_context(
             user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            viewport={'width': 1920, 'height': 1080}
+            viewport={'width': 1600, 'height': 900}
         )
         self.page = await self.context.new_page()
         self.page.set_default_timeout(30000)
@@ -42,7 +42,7 @@ class BrowserTool:
                 if not url.startswith(('http://', 'https://')):
                     url = f"https://{url}"
                 await self.page.goto(url, wait_until='domcontentloaded')
-                await asyncio.sleep(2)
+                await asyncio.sleep(1)
                 return f"Navigated to {self.page.url}"
             except Exception as e:
                 return f"Navigation failed: {str(e)}"
@@ -54,9 +54,19 @@ class BrowserTool:
             """Get current page HTML content"""
             try:
                 html = await self.page.content()
-                return html[:30000]  # Limit size
+                
+                # Clean HTML before returning
+                from bs4 import BeautifulSoup, Comment
+                soup = BeautifulSoup(html, 'html.parser')
+                
+                for tag in soup(['script', 'style', 'head', 'meta', 'link', 'noscript', 'svg', 'path', 'img', 'video']):
+                    tag.decompose()
+                
+                cleaned = str(soup)[:25000]  # Now can use larger limit since it's cleaner
+                return cleaned
+                
             except Exception as e:
-                return f"Error getting content: {str(e)}"
+                return f"Error: {str(e)}"
         return get_page_content
         
     def get_click_tool(self):
@@ -66,7 +76,11 @@ class BrowserTool:
             try:
                 # Get page content for LLM analysis
                 html = await self.page.content()
-                
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(html, 'html.parser')
+                for tag in soup(['script', 'style', 'head', 'meta', 'link', 'noscript', 'svg', 'path', 'img', 'video']):
+                    tag.decompose()
+                cleaned_html = str(soup)
                 # Import LLM tool here to avoid circular dependency
                 from openai import AsyncOpenAI
                 import os
@@ -75,7 +89,7 @@ class BrowserTool:
                 
                 prompt = f"""Find the element to click based on this description: "{element_description}"
 
-Page HTML: {html[:7000]}
+Page HTML: {cleaned_html[:20000]}
 
 Return ONLY a JSON object:
 {{"selector": "CSS selector to click", "reasoning": "why this element"}}"""
@@ -91,7 +105,7 @@ Return ONLY a JSON object:
                 selector = result["selector"]
                 
                 await self.page.click(selector)
-                await asyncio.sleep(2)
+                await asyncio.sleep(1)
                 return f"Clicked: {element_description}. New URL: {self.page.url}"
                 
             except Exception as e:
@@ -104,6 +118,12 @@ Return ONLY a JSON object:
             """Fill input field. LLM finds the field based on description."""
             try:
                 html = await self.page.content()
+
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(html, 'html.parser')
+                for tag in soup(['script', 'style', 'head', 'meta', 'link', 'noscript', 'svg', 'path', 'img', 'video']):
+                    tag.decompose()
+                cleaned_html = str(soup)
                 
                 from openai import AsyncOpenAI
                 import os
@@ -112,7 +132,7 @@ Return ONLY a JSON object:
                 
                 prompt = f"""Find input field: "{field_description}"
 
-Page HTML: {html[:7000]}
+Page HTML: {cleaned_html[:20000]}
 
 Return ONLY JSON:
 {{"selector": "CSS selector for input", "reasoning": "why"}}"""
@@ -132,7 +152,7 @@ Return ONLY JSON:
                 # Try to submit
                 try:
                     await self.page.press(selector, "Enter")
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(2)
                 except:
                     pass
                     

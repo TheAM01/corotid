@@ -24,7 +24,7 @@ TOOLS:
 - extract_links(content, criteria)
 - extract_data(content, schema)
 - log_progress(step, details)
-- check_and_enter_job_iframe()  # NEW: fully agentic iframe detection
+- check_and_enter_job_iframe()
 
 EXACT ALGORITHM - FOLLOW THIS:
 STEP 1: FIND COMPANY WEBSITE
@@ -37,7 +37,7 @@ STEP 1: FIND COMPANY WEBSITE
   * Consider BOTH:
       - main company domain
       - subdomains containing the company name or keywords from the company name
-  * Pick the domain or subdomain most likely to host the careers page
+  * Pick the domain or subdomain most likely to host the careers page; do not go to login pages
   * navigate_to_url(that domain)
   * log_progress("Found company site", url)
 
@@ -51,7 +51,7 @@ STEP 2: FIND CAREERS PAGE
 
 STEP 3: FIND ALL JOB LISTINGS PAGE
 - get_page_content()
-- analyze_content(content, "How do I access ALL job listings? Is there a search bar, a 'View All Jobs' link, or are listings already visible? Are the jobs in an iframe?")
+- analyze_content(content, "How do I access ALL job listings? Is there a search bar, a 'View All Jobs' or 'Find a Job' link, or are listings already visible? Are the jobs in an iframe?")
 - Based on answer:
   * If answer mentions iframe: call check_and_enter_job_iframe()
    - This will scan all iframes and switch context to the one containing job listings

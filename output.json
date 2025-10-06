@@ -1,10 +1,14 @@
 {
   "success": true,
   "job_params": {
-    "job_title": "(Senior) E-Learning Specialist & Trainer (m/w/d)",
-    "company_name": "eos direct inkasso",
+    "job_title": "PhD Student Steer-by-Wire (f/m/d)",
+    "company_name": "Volkswagen gorup",
     "company_domain": null,
     "location": null
   },
-  "result": "{\"jobs\": [], \"total_found\": 0, \"search_query\": \"(Senior) E-Learning Specialist & Trainer (m/w/d) — Company: eos direct inkasso\"}\n\nSummary of actions and findings (logs):\n- Step 1: Opened DuckDuckGo and then navigated to the company family site https://eos-solutions.com as the most likely company site for \"eos direct inkasso\". (Logged)\n- Step 2: Located and opened the EOS Group careers page at https://eos-solutions.com/en/career/. (Logged)\n- Step 3: Attempted to find how to access all job listings on the careers page. Checked for internal listings, links to an external job portal, and common external portals (Personio). The site appears to use an external applicant system (Personio) for vacancies in some setups; attempts to open the Personio app URL resulted in Personio login/redirect behavior. A direct search on LinkedIn for the exact title + company returned 0 results. No server-rendered or visible matching job listings were found on the company career page or via LinkedIn. (Logged)\n- Step 4: Extracted job posting links matching the exact title. Found 0 matches. (Logged)\n- Step 5: No job URLs to scrape (none found).\n- Step 6: Returned final JSON (above) with jobs: [] and total_found: 0. (This is the final output.)\n\nNotes and recommendations if you want me to continue:\n- The EOS career pages often link to an external applicant tracking portal (Personio) which redirects through personio.com and may require inspecting the careers page DOM and network requests from a browser (DevTools) to find the exact vacancies endpoint (often under the company-specific Personio subdomain). If you can allow a live browser session with full DOM/network access (or paste the full careers page HTML or any link you see on that page that looks like a job portal), I can try again to fetch internal/external vacancy APIs and extract postings.\n- Alternatively, provide permission to run another web search (outside DuckDuckGo, since DuckDuckGo was used once already per instructions) or give any direct job-portal URL you have (e.g., personio/e-recruiting link). I can then scrape postings directly."
+  "result": {
+    "jobs": [],
+    "total_found": 0,
+    "search_query": "PhD Student Steer-by-Wire (f/m/d)"
+  }
 }
